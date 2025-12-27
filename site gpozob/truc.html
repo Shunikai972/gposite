@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grand Piece Online – Ultimate Fan Site</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+/* ================== BASE ================== */
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050505;color:#fff;font-family:'Poppins',sans-serif;overflow-x:hidden}
+h1,h2,h3,.logo,.btn-play{font-family:'Orbitron',sans-serif}
+
+/* ================== SAKURA INTRO ================== */
+#sakura-overlay{
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:#000;z-index:10000;display:flex;
+    justify-content:center;align-items:center;
+    transition:opacity 2s ease-out,visibility 2s;
+    pointer-events:none;
+}
+#sakura-text{
+    position:absolute;font-size:4rem;color:#ffb7b2;
+    font-weight:900;letter-spacing:10px;
+    text-shadow:0 0 30px #ff0055, 0 0 60px #ff0055;
+    animation:textFadeOut 3.5s forwards;text-align:center;
+}
+canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+
+/* ================== HEADER ================== */
+header{
+    position:fixed;top:0;width:100%;padding:20px 40px;
+    background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);
+    display:flex;justify-content:space-between;align-items:center;
+    z-index:100;border-bottom:1px solid rgba(255,255,255,.1);
+}
+.logo{color:#ff0055;font-size:1.8rem;font-weight:bold}
+nav ul{display:flex;gap:20px;list-style:none}
+nav a{text-decoration:none;color:white;font-weight:bold;transition:.3s}
+nav a:hover{color:#00d2ff}
+
+/* ================== HERO ================== */
+.hero{
+    height:100vh;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;text-align:center;
+    background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+    url("https://media.tenor.com/Fw5q3JtQyBQAAAAC/one-piece-sea.gif") center/cover;
+    background-attachment:fixed;
+}
+.hero h1{font-size:4.5rem;text-shadow:0 0 20px #00d2ff;margin-bottom:20px}
+.hero p{font-size:1.5rem;max-width:700px;margin-bottom:40px;color:#ddd}
+.btn-play{
+    padding:15px 50px;font-size:1.2rem;
+    background:#ff0055;border:none;border-radius:6px;
+    color:white;cursor:pointer;box-shadow:0 0 20px #ff0055;
+    transition:.3s;
+}
+.btn-play:hover{transform:scale(1.1);background:#ff3377}
+
+/* ================== SECTIONS ================== */
+.section{padding:100px 20px}
+.section h2{text-align:center;font-size:3rem;color:#00d2ff;margin-bottom:60px;text-transform:uppercase}
+
+/* ================== CARROUSEL LÉGENDAIRE ================== */
+.slideshow-container{
+    max-width:900px;margin:auto;position:relative;
+    border:2px solid #222;border-radius:15px;overflow:hidden;
+    background:#111;box-shadow:0 0 50px rgba(255,0,85,0.2);
+}
+.mySlides{display:none;text-align:center;padding:40px}
+.mySlides img{height:350px;object-fit:contain;filter:drop-shadow(0 0 15px #fff);animation:float 3s infinite ease-in-out}
+.caption{background:rgba(0,0,0,.8);padding:30px;position:absolute;bottom:0;width:100%}
+.caption h3{color:#ff0055;font-size:1.8rem;margin-bottom:10px}
+.prev,.next{
+    cursor:pointer;position:absolute;top:50%;padding:16px;
+    font-size:25px;font-weight:bold;background:rgba(0,0,0,.5);
+    border-radius:50%;margin:0 10px;user-select:none;transition:.3s;
+}
+.next{right:0}.prev{left:0}
+.prev:hover,.next:hover{background:#ff0055}
+
+/* ================== GRID TOUS LES FRUITS ================== */
+.fruit-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:30px;max-width:1400px;margin:auto;
+}
+.fruit-card{
+    background:rgba(255,255,255,0.03);border:1px solid #222;
+    border-radius:15px;overflow:hidden;transition:.4s;
+    display:flex;flex-direction:column;
+}
+.fruit-card:hover{transform:translateY(-10px);border-color:#00d2ff;box-shadow:0 0 30px rgba(0,210,255,0.3)}
+.img-box{
+    background:#111;height:200px;display:flex;align-items:center;
+    justify-content:center;padding:20px;
+}
+.img-box img{max-height:100%;max-width:100%;object-fit:contain;transition:.4s}
+.fruit-card:hover img{transform:scale(1.1) rotate(5deg)}
+
+.card-info{padding:25px;flex-grow:1}
+.card-info h3{color:#00d2ff;margin-bottom:10px;font-size:1.4rem}
+.rarity-tag{
+    display:inline-block;padding:3px 10px;border-radius:4px;
+    font-size:0.75rem;font-weight:bold;text-transform:uppercase;margin-bottom:15px;
+}
+.myth{background:#00d2ff;color:#000}
+.leg{background:#ff0055;color:#fff}
+.rare{background:#9d00ff;color:#fff}
+
+.ability-box{
+    margin-top:15px;font-size:0.85rem;color:#ccc;
+    border-top:1px solid #333;padding-top:15px;
+}
+.ability-box b{color:#ff0055}
+
+/* ================== FOOTER ================== */
+footer{padding:50px;background:#000;text-align:center;border-top:1px solid #222;color:#555}
+
+/* ================== ANIMATIONS ================== */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+@keyframes textFadeOut{0%{opacity:0;transform:scale(0.8)}20%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:scale(1.2)}}
+</style>
+</head>
+
+<body>
+
+<div id="sakura-overlay">
+    <canvas id="sakuraCanvas"></canvas>
+    <div id="sakura-text">GRAND PIECE ONLINE<br><span style="font-size:1.5rem;color:#fff">JADE RAMENE TON CUL 💖</span></div>
+</div>
+
+<header>
+    <div class="logo">GPO WIKI</div>
+    <nav>
+        <ul>
+            <li><a href="#legendary">Top Tier</a></li>
+            <li><a href="#allfruits">Encyclopédie</a></li>
+            <li><a href="https://www.roblox.com/games/1730877806/Grand-Piece-Online" target="_blank">Jouer</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>MAÎTRISE LES POUVOIRS</h1>
+    <p>Le guide complet des Fruits du Démon, des attaques et de la rareté. Nan je déconne y as 0,1% du jeu  </p>
+    <button class="btn-play" onclick="window.open('https://www.roblox.com/games/1730877806/Grand-Piece-Online')">COMMENCER L'AVENTURE</button>
+</section>
+
+<section class="section" id="legendary">
+    <h2>Fruits de Rang S</h2>
+    <div class="slideshow-container">
+        
+        <div class="mySlides">
+            <img src="assets/tori.gif" alt="Tori">
+            <div class="caption">
+                <h3>Tori Tori no Mi (Phoenix)</h3>
+                <p>Mythique - Soin infini et vol majestueux.</p>
+            </div>
+        </div>
+
+        <div class="mySlides">
+            <img src="assets/mochi.gif" alt="Mochi">
+            <div class="caption">
+                <h3>Mochi Mochi no Mi</h3>
+                <p>Mythique - Contrôle absolu du terrain et combos dévastateurs.</p>
+            </div>
+        </div>
+
+        <div class="mySlides">
+            <img src="assets/magu.webp" alt="Magu">
+            <div class="caption">
+                <h3>Magu Magu no Mi (Magma)</h3>
+                <p>Légendaire - Le roi du PVE et des dégâts de zone.</p>
+            </div>
+        </div>
+
+        <a class="prev" onclick="plusSlides(-1)">❮</a>
+        <a class="next" onclick="plusSlides(1)">❯</a>
+    </div>
+</section>
+
+<section class="section" id="allfruits">
+    <h2>Base de Données des Fruits</h2>
+    <div class="fruit-grid">
+
+        <div class="fruit-card">
+            <div class="img-box"><img src="assets/ope.gif"></div>
+            <div class="card-info">
+                <span class="rarity-tag myth">Mythique</span>
+                <h3>Ope Ope no Mi</h3>
+                <p>Crée des salles d'opération pour manipuler l'espace.</p>
+                <div class="ability-box">
+                    <p><b>[Z] Room :</b> Domaine de contrôle.</p>
+                    <p><b>[X] Shambles :</b> Téléportation d'objets.</p>
+                    <p><b>[V] Gamma Knife :</b> Dégâts internes massifs.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="fruit-card">
+            <div class="img-box"><img src="assets/pika.gif"></div>
+            <div class="card-info">
+                <span class="rarity-tag leg">Légendaire</span>
+                <h3>Pika Pika no Mi</h3>
+                <p>Devenez l'homme-lumière et frappez à la vitesse divine.</p>
+                <div class="ability-box">
+                    <p><b>[Z] Light Kick :</b> Coup de pied lumineux.</p>
+                    <p><b>[E] Jewels of Light :</b> Pluie de lasers.</p>
+                    <p><b>[F] Light Flight :</b> Vol ultra rapide.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="fruit-card">
+            <div class="img-box"><img src="assets/goro.jpg"></div>
+            <div class="card-info">
+                <span class="rarity-tag leg">Légendaire</span>
+                <h3>Goro Goro no Mi</h3>
+                <p>Maîtrise la foudre pour paralyser tes ennemis.</p>
+                <div class="ability-box">
+                    <p><b>[R] Raigo :</b> Sphère électrique géante.</p>
+                    <p><b>[Z] Flash :</b> Téléportation éclair.</p>
+                    <p><b>[X] Dragon :</b> Dragon de foudre.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="fruit-card">
+            <div class="img-box"><img src="assets/mera.gif"></div>
+            <div class="card-info">
+                <span class="rarity-tag leg">Légendaire</span>
+                <h3>Mera Mera no Mi</h3>
+                <p>Le pouvoir des flammes pour tout brûler sur ton passage.</p>
+                <div class="ability-box">
+                    <p><b>[Z] Hiken :</b> Poing de feu ardent.</p>
+                    <p><b>[E] Fire Pillar :</b> Colonne de flammes.</p>
+                    <p><b>[R] Enkai :</b> Grand cercle de feu.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="fruit-card">
+            <div class="img-box"><img src="assets/venom.jpg"></div>
+            <div class="card-info">
+                <span class="rarity-tag myth">Mythique</span>
+                <h3>Venom Fruit</h3>
+                <p>Produisez des toxines mortelles qui rongent l'ennemi.</p>
+                <div class="ability-box">
+                    <p><b>[Z] Hydra :</b> Trois dragons de poison.</p>
+                    <p><b>[X] Venom Road :</b> Déplacement toxique.</p>
+                    <p><b>[V] Transformation :</b> Forme démon.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="fruit-card">
+            <div class="img-box"><img src="assets/hie.gif"></div>
+            <div class="card-info">
+                <span class="rarity-tag leg">Légendaire</span>
+                <h3>Hie Hie no Mi</h3>
+                <p>Gelez l'océan et immobilisez n'importe quel adversaire.</p>
+                <div class="ability-box">
+                    <p><b>[V] Ice Age :</b> Gel total de la zone.</p>
+                    <p><b>[Z] Ice Partisan :</b> Lances de glace.</p>
+                    <p><b>[F] Ice Bike :</b> Roulez sur l'eau.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="fruit-card">
+            <div class="img-box"><img src="assets/zushi.gif"></div>
+            <div class="card-info">
+                <span class="rarity-tag rare">Rare</span>
+                <h3>Zushi Zushi no Mi</h3>
+                <p>Manipulez la gravité pour écraser vos rivaux.</p>
+                <div class="ability-box">
+                    <p><b>[Z] Gravity Push :</b> Repousse tout autour.</p>
+                    <p><b>[E] Meteor :</b> Invoque une roche lunaire.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="fruit-card">
+            <div class="img-box"><img src="assets/bari.webp"></div>
+            <div class="card-info">
+                <span class="rarity-tag rare">Rare</span>
+                <h3>Bari Bari no Mi</h3>
+                <p>La défense absolue grâce aux barrières indestructibles.</p>
+                <div class="ability-box">
+                    <p><b>[Z] Barrier Crash :</b> Charge défensive.</p>
+                    <p><b>[E] Barrier Wall :</b> Protection frontale.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <p>© 2025 Fan Wiki GPO - Toutes les images appartiennent au grand beau et fort ASTROOOO.</p>
+</footer>
+
+<script>
+/* ================== SAKURA JS ================== */
+const canvas=document.getElementById("sakuraCanvas");
+const ctx=canvas.getContext("2d");
+let w=window.innerWidth,h=window.innerHeight;
+canvas.width=w;canvas.height=h;
+let petals=[],count=450;
+
+class Petal{
+    constructor(){this.reset()}
+    reset(){
+        this.x=Math.random()*w;this.y=Math.random()*-h;
+        this.size=Math.random()*8+4;
+        this.sy=Math.random()*5+2;this.sx=Math.random()*5+3;
+        this.r=Math.random()*360;this.rs=Math.random()*4-2;
+        this.color=`rgba(255,${130+Math.random()*60},${160+Math.random()*60},${Math.random()*0.6+0.4})`;
+    }
+    update(){
+        this.y+=this.sy;this.x+=this.sx;this.r+=this.rs;
+        if(this.y>h||this.x>w)this.reset();
+    }
+    draw(){
+        ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.r*Math.PI/180);
+        ctx.fillStyle=this.color;ctx.beginPath();
+        ctx.moveTo(0,0);ctx.bezierCurveTo(this.size/2,-this.size/2,this.size,0,0,this.size);
+        ctx.bezierCurveTo(-this.size,0,-this.size/2,-this.size/2,0,0);
+        ctx.fill();ctx.restore();
+    }
+}
+
+for(let i=0;i<count;i++)petals.push(new Petal());
+function animate(){
+    ctx.clearRect(0,0,w,h);
+    petals.forEach(p=>{p.update();p.draw()});
+    requestAnimationFrame(animate);
+}
+animate();
+
+window.onload=()=>{
+    setTimeout(()=>{
+        const o=document.getElementById("sakura-overlay");
+        o.style.opacity=0;
+        setTimeout(()=>o.style.visibility="hidden",2000);
+    },3500);
+}
+window.onresize=()=>{w=innerWidth;h=innerHeight;canvas.width=w;canvas.height=h}
+
+/* ================== SLIDER ================== */
+let slideIndex=1;showSlides(slideIndex);
+function plusSlides(n){showSlides(slideIndex+=n)}
+function showSlides(n){
+    let slides=document.getElementsByClassName("mySlides");
+    if(n>slides.length)slideIndex=1;
+    if(n<1)slideIndex=slides.length;
+    for(let i=0;i<slides.length;i++)slides[i].style.display="none";
+    slides[slideIndex-1].style.display="block"
+}
+setInterval(()=>plusSlides(1),5000);
+</script>
+
+</body>
+</html>
